@@ -295,6 +295,33 @@ std::string CDashboard::SetCollisionLevel(int level)
     return SendRecvMsg(str);
 };
 
+
+//Collision
+
+std::string CDashboard::SetFCCollision(double force, double torque)
+{
+    std::unique_lock<std::mutex> lockValue(m_mutexSend);
+
+    char cmd[100];
+    snprintf(cmd, sizeof(cmd),
+             "SetFCCollision(%0.3f,%0.3f)",
+             force, torque);
+
+    return SendRecvMsg(cmd);
+}
+
+std::string CDashboard::FCCollisionSwitch(int enable)
+{
+    std::unique_lock<std::mutex> lockValue(m_mutexSend);
+
+    char cmd[100];
+    snprintf(cmd, sizeof(cmd),
+             "FCCollisionSwitch(enable=%d)",
+             enable);
+
+    return SendRecvMsg(cmd);
+}
+
 std::string CDashboard::GetAngle()
 {
     std::string str = "GetAngle()";
