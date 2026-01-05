@@ -96,6 +96,10 @@ public:
     std::string FCSetForceSpeedLimit(const CDescartesPoint& pt);
     std::string FCSetForce(const CDescartesPoint& pt);
 
+    //Collision
+    std::string SetFCCollision(double force, double torque);
+    std::string FCCollisionSwitch(int enable);
+
     //460新增运动指令
     std::string RelPointTool(const CDescartesPoint& pt,const COffsetPoint& pt2);
     std::string RelPointTool(const CJointPoint& pt,const COffsetPoint& pt2);
