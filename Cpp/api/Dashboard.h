@@ -15,73 +15,73 @@ public:
     std::string SendRecvMsg(std::string& str);
     std::string SendRecvMsg(char* cmd);
     /// <summary>
-    /// 复位，用于清除错误
+    /// リセット（エラーをクリア）
     /// </summary>
-    /// <returns>返回执行结果的描述信息</returns>
+    /// <returns>実行結果の説明メッセージ</returns>
     std::string ClearError();
 
     /// <summary>
-    /// 机器人上电
+    /// ロボット電源ON
     /// </summary>
-    /// <returns>返回执行结果的描述信息</returns>
+    /// <returns>実行結果の説明メッセージ</returns>
     std::string PowerOn();
 
     /// <summary>
-    /// 急停
+    /// 非常停止
     /// </summary>
-    /// <returns>返回执行结果的描述信息</returns>
+    /// <returns>実行結果の説明メッセージ</returns>
     std::string EmergencyStop(int);
 
     /// <summary>
-    /// 使能机器人
+    /// ロボットをイネーブル
     /// </summary>
-    /// <returns>返回执行结果的描述信息</returns>
+    /// <returns>実行結果の説明メッセージ</returns>
     std::string EnableRobot();
     template <typename... Args>
     std::string EnableRobot(Args... args);
 
     /// <summary>
-    /// 下使能机器人
+    /// ロボットをディスエーブル
     /// </summary>
-    /// <returns>返回执行结果的描述信息</returns>
+    /// <returns>実行結果の説明メッセージ</returns>
     std::string DisableRobot();
 
     /// <summary>
-    /// 设置全局速度比例。
+    /// グローバル速度比率を設定
     /// </summary>
-    /// <param name="ratio">运动速度比例，取值范围：1~100</param>
-    /// <returns>返回执行结果的描述信息</returns>
+    /// <param name="ratio">速度比率（範囲: 1~100）</param>
+    /// <returns>実行結果の説明メッセージ</returns>
     std::string SpeedFactor(int ratio);
 
     /// <summary>
-    /// 设置数字输出端口状态（队列指令）
+    /// デジタル出力ポート状態を設定（キュー指令）
     /// </summary>
-    /// <param name="index">数字输出索引，取值范围：1~16或100~1000</param>
-    /// <param name="status">数字输出端口状态，true：高电平；false：低电平</param>
-    /// <returns>返回执行结果的描述信息</returns>
+    /// <param name="index">デジタル出力インデックス（範囲: 1~16 または 100~1000）</param>
+    /// <param name="status">デジタル出力状態（1: High / 0: Low）</param>
+    /// <returns>実行結果の説明メッセージ</returns>
     std::string DO(int index, int status);
     std::string DO(int index, int status, int time);
 
     /// <summary>
-    /// 获取错误ID
+    /// エラーID取得
     /// </summary>
-    /// <returns>返回执行结果的描述信息</returns>
+    /// <returns>実行結果の説明メッセージ</returns>
     std::string GetErrorID();
 
     std::string User(int index);
     std::string Tool(int index);
 
-    // 轨迹恢复指令
+    // 軌跡リカバリ指令
     std::string SetResumeOffset(double distance);
     std::string PathRecovery();
     std::string PathRecoveryStop();
     std::string PathRecoveryStatus();
 
-    // 日志导出指令
+    // ログエクスポート指令
     std::string LogExportUSB(int range);
     std::string GetExportStatus();
 
-    // 力控指令
+    // 力制御指令
     std::string EnableFTSensor(int status);
     std::string SixForceHome();
     std::string GetForce(int tool);
@@ -96,11 +96,11 @@ public:
     std::string FCSetForceSpeedLimit(const CDescartesPoint& pt);
     std::string FCSetForce(const CDescartesPoint& pt);
 
-    //Collision
+    // 衝突
     std::string SetFCCollision(double force, double torque);
     std::string FCCollisionSwitch(int enable);
 
-    //460新增运动指令
+    // 460 で追加された動作指令
     std::string RelPointTool(const CDescartesPoint& pt,const COffsetPoint& pt2);
     std::string RelPointTool(const CJointPoint& pt,const COffsetPoint& pt2);
     std::string RelPointUser(const CDescartesPoint& pt,const COffsetPoint& pt2);
@@ -113,9 +113,9 @@ public:
     std::string RobotMode();
 
     /// <summary>
-    /// 请求切换TCP模式
+    /// TCPモード切替要求
     /// </summary>
-    /// <returns>返回执行结果的描述信息</returns>
+    /// <returns>実行結果の説明メッセージ</returns>
     std::string RequestControl();
 
     std::string SetPayload(float load);
@@ -159,21 +159,21 @@ public:
     std::string ModbusRTUCreate(int slave_id, int baud, Args... args);
 
     std::string ModbusCreate(std::string ip, int port, int slave_id);
-    std::string ModbusCreate(std::string ip, int port, int slave_id, int isRTU);    //  重载可选参数
+    std::string ModbusCreate(std::string ip, int port, int slave_id, int isRTU);    //  オーバーロード（オプション引数）
 
     std::string ModbusClose(int index);
     std::string GetInBits(int index, int addr, int count);
 
     std::string GetInRegs(int index, int addr, int count);
-    std::string GetInRegs(int index, int addr, int count, std::string valType);    //  重载可选参数
+    std::string GetInRegs(int index, int addr, int count, std::string valType);    //  オーバーロード（オプション引数）
 
     std::string GetCoils(int index, int addr, int count);
     std::string SetCoils(int index, int addr, int count, std::string valTab);
     std::string GetHoldRegs(int index, int addr, int count);
-    std::string GetHoldRegs(int index, int addr, int count, std::string valType);    //  重载可选参数
+    std::string GetHoldRegs(int index, int addr, int count, std::string valType);    //  オーバーロード（オプション引数）
     std::string SetHoldRegs(int index, int addr, int count, std::string valTab);
     std::string SetHoldRegs(int index, int addr, int count, std::string valTab,
-                            std::string valType);    //  重载可选参数
+                            std::string valType);    //  オーバーロード（オプション引数）
     std::string DI(int index);
     std::string ToolDI(int index);
     std::string AI(int index);
@@ -224,9 +224,9 @@ public:
     std::string SetOutputInt(int address, int value);
     std::string SetOutputFloat(int address, int value);
 
-    /// 点到点运动，目标点位为笛卡尔点位
-    /// <param name="pt">笛卡尔点位</param>
-    /// <returns>返回执行结果的描述信息</returns>
+    /// 点到点動作（目標点はデカルト座標）
+    /// <param name="pt">デカルト座標の目標点</param>
+    /// <returns>実行結果の説明メッセージ</returns>
     std::string MovJ(const CDescartesPoint& pt);
     template <typename... Args>
     std::string MovJ(const CDescartesPoint& pt, Args... args);
@@ -235,9 +235,9 @@ public:
     template <typename... Args>
     std::string MovJ(const CJointPoint& pt, Args... args);
 
-    /// 直线运动，目标点位为笛卡尔点位
-    /// <param name="pt">笛卡尔点位</param>
-    /// <returns>返回执行结果的描述信息</returns>
+    /// 直線動作（目標点はデカルト座標）
+    /// <param name="pt">デカルト座標の目標点</param>
+    /// <returns>実行結果の説明メッセージ</returns>
     std::string MovL(const CDescartesPoint& pt);
     template <typename... Args>
     std::string MovL(const CDescartesPoint& pt, Args... args);
@@ -278,22 +278,22 @@ public:
     template <typename... Args>
     std::string Circle(const CJointPoint& pt, const CJointPoint& pt2, int count, Args... args);
 
-    /// 关节点动运动，不固定距离运动
-    /// <param name="s">点动运动轴</param>
-    /// <returns>返回执行结果的描述信息</returns>
+    /// 関節ジョグ動作（距離固定ではない）
+    /// <param name="s">ジョグ対象の軸</param>
+    /// <returns>実行結果の説明メッセージ</returns>
     std::string MoveJog(std::string traceName);
     template <typename... Args>
     std::string MoveJog(std::string traceName, Args... args);
 
-    /// 停止关节点动运动
-    /// <returns>返回执行结果的描述信息</returns>
+    /// 関節ジョグ動作を停止
+    /// <returns>実行結果の説明メッセージ</returns>
     std::string StopMoveJog();
 
-    // 轨迹复现。(轨迹文件关节点)
-    /// <param traceName="s">轨迹文件名（含后缀） 轨迹路径存放在/dobot/userdata/project/process/trajectory/ </param>
-    /// <param constInt="s">constInt=1时，匀速复现，轨迹中的停顿及死区会被移除;  constInt=0时，按照原速复现； </param>
-    /// <param cart="s"> cart=1时，按笛卡尔路径复现； cart=0时，按关节路径复现； </param>
-    /// <returns>返回执行结果的描述信息</returns>
+    // 軌跡再生（軌跡ファイル: 関節）
+    /// <param traceName="s">軌跡ファイル名（拡張子含む）。軌跡は /dobot/userdata/project/process/trajectory/ に保存</param>
+    /// <param constInt="s">constInt=1: 等速再生（停止やデッドゾーンは除去） / constInt=0: 元の速度で再生</param>
+    /// <param cart="s">cart=1: デカルト経路で再生 / cart=0: 関節経路で再生</param>
+    /// <returns>実行結果の説明メッセージ</returns>
     std::string StartPath(std::string traceName);
     template <typename... Args>
     std::string StartPath(std::string traceName, Args... args);
@@ -336,7 +336,7 @@ protected:
     void OnDisconnected() override;
 
 private:
-    // 类外定义成员函数
+    // クラス外で定義するメンバ関数
     template <typename T>
     void printArg(T arg);
 
@@ -350,15 +350,15 @@ private:
     std::mutex m_mutexSend;
 };
 
-// 模版函数要定义声明到.h文件里面
-// 可选参数输出
+// テンプレート関数は .h 内で定義する必要があります
+// オプション引数の出力
 template <typename T>
 void CDashboard::printArg(T arg)
 {
     strSend = strSend + toString(arg) + ")";
 }
 
-// 递归输出可选参数
+// 再帰的にオプション引数を出力
 template <typename T, typename... Args>
 void CDashboard::printArg(T arg, Args... args)
 {
@@ -366,7 +366,7 @@ void CDashboard::printArg(T arg, Args... args)
     printArg(args...);
 }
 
-// 辅助函数，将参数转换为字符串
+// 補助関数：引数を文字列へ変換
 template <typename T>
 std::string CDashboard::toString(T arg)
 {

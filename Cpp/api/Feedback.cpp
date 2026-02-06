@@ -50,35 +50,35 @@ void CFeedback::OnRecvData()
             continue;
         }
 
-        bool bHasFound = false;    // 是否找到数据包头了
+        bool bHasFound = false;    // データパケットのヘッダを見つけたか
         for (int i = 0; i < iHasRead; ++i) {
-            // 找到消息头
+            // メッセージヘッダを探す
             unsigned short iMsgSize = CBitConverter::ToUShort(buffer + i);
             if (1440 != iMsgSize) {
                 continue;
             }
-            // 校验
+            // チェック
             uint64_t checkValue = CBitConverter::ToUInt64(buffer + i + 48);
-            if (0x0123456789ABCDEF == checkValue) {    // 找到了校验值
+            if (0x0123456789ABCDEF == checkValue) {    // チェック値を検出
                 bHasFound = true;
-                if (i != 0) {    // 说明存在粘包，要把前面的数据清理掉
+                if (i != 0) {    // 粘包（複数パケットが連結）しているため、先頭の不要データを破棄
                     iHasRead = iHasRead - i;
                     memmove(buffer, buffer + i, BUFFERSIZE - i);
                 }
                 break;
             }
         }
-        if (!bHasFound) {    // 如果没找到头，判断数据长度是不是快超过了总长度，超过了，说明数据全都有问题，删掉
+        if (!bHasFound) {    // ヘッダが見つからない場合、バッファが溢れそうなら破棄（データ異常扱い）
             if (iHasRead >= BUFFERSIZE)
                 iHasRead = 0;
             continue;
         }
-        // 再次判断字节数是否够
+        // バイト数が十分か再確認
         if (iHasRead < 1440) {
             continue;
         }
         iHasRead = iHasRead - 1440;
-        // 按照协议的格式解析数据
+        // プロトコル形式に従ってデータを解析
         ParseData(buffer);
         memmove(buffer, buffer + 1440, BUFFERSIZE - 1440);
     }
@@ -88,11 +88,11 @@ void CFeedback::ParseData(char* pBuffer)
 {
     int iStartIndex = 0;
 
-    // 消息总长度
+    // メッセージ全長
     m_feedbackData.MessageSize = CBitConverter::ToUShort(pBuffer + iStartIndex);
     iStartIndex += 2;
 
-    //保留位 Reserved1[3]
+    // 予約領域 Reserved1[3]
     int iArrLength = sizeof(m_feedbackData.Reserved1) / sizeof(m_feedbackData.Reserved1[0]);
     for (int i = 0; i < iArrLength; ++i) {
         m_feedbackData.Reserved1[i] = CBitConverter::ToShort(pBuffer + iStartIndex);
@@ -103,32 +103,32 @@ void CFeedback::ParseData(char* pBuffer)
     m_feedbackData.DigitalOutputs = CBitConverter::ToInt64(pBuffer + iStartIndex);  iStartIndex += 8;
     m_feedbackData.RobotMode      = CBitConverter::ToInt64(pBuffer + iStartIndex);  iStartIndex += 8;
     m_feedbackData.TimeStamp      = CBitConverter::ToInt64(pBuffer + iStartIndex);  iStartIndex += 8;
-    m_feedbackData.RunTime        = CBitConverter::ToInt64(pBuffer + iStartIndex);  iStartIndex += 8; // 新增字段
+    m_feedbackData.RunTime        = CBitConverter::ToInt64(pBuffer + iStartIndex);  iStartIndex += 8; // 追加フィールド
     m_feedbackData.TestValue      = CBitConverter::ToInt64(pBuffer + iStartIndex);  iStartIndex += 8;
 
-    // 保留位 Reserved2[8]
+    // 予約領域 Reserved2[8]
     iArrLength = sizeof(m_feedbackData.Reserved2) / sizeof(m_feedbackData.Reserved2[0]);
     for (int i = 0; i < iArrLength; ++i) {
         m_feedbackData.Reserved2[i] = pBuffer[iStartIndex];
         iStartIndex += 1;
     }
 
-    // 5. 速度比例和保留位
+    // 5. 速度スケーリングと予約領域
     m_feedbackData.SpeedScaling = CBitConverter::ToDouble(pBuffer + iStartIndex);  iStartIndex += 8;
 
-    // 保留位 Reserved3[16]
+    // 予約領域 Reserved3[16]
     iArrLength = sizeof(m_feedbackData.Reserved3) / sizeof(m_feedbackData.Reserved3[0]);
     for (int i = 0; i < iArrLength; ++i) {
         m_feedbackData.Reserved3[i] = pBuffer[iStartIndex];
         iStartIndex += 1;
     }
 
-    // 电压/电流和程序状态
+    // 電圧/電流とプログラム状態
     m_feedbackData.VRobot       = CBitConverter::ToDouble(pBuffer + iStartIndex);  iStartIndex += 8;
     m_feedbackData.IRobot       = CBitConverter::ToDouble(pBuffer + iStartIndex);  iStartIndex += 8;
-    m_feedbackData.ProgramState = CBitConverter::ToDouble(pBuffer + iStartIndex);  iStartIndex += 8; // 新增字段
+    m_feedbackData.ProgramState = CBitConverter::ToDouble(pBuffer + iStartIndex);  iStartIndex += 8; // 追加フィールド
 
-    // 安全IO状态
+    // 安全IO状態
     iArrLength = sizeof(m_feedbackData.SafetyOIn) / sizeof(m_feedbackData.SafetyOIn[0]);
     for (int i = 0; i < iArrLength; ++i) {
         m_feedbackData.SafetyOIn[i] = pBuffer[iStartIndex];
@@ -140,14 +140,14 @@ void CFeedback::ParseData(char* pBuffer)
         iStartIndex += 1;
     }
 
-    // 保留位 Reserved4[76]
+    // 予約領域 Reserved4[76]
     iArrLength = sizeof(m_feedbackData.Reserved4) / sizeof(m_feedbackData.Reserved4[0]);
     for (int i = 0; i < iArrLength; ++i) {
         m_feedbackData.Reserved4[i] = pBuffer[iStartIndex];
         iStartIndex += 1;
     }
 
-    // 关节目标值（位置/速度/电流等）
+    // 関節の目標値（位置/速度/電流など）
     iArrLength = sizeof(m_feedbackData.QTarget)/sizeof(m_feedbackData.QTarget[0]);
     for(int i=0; i<iArrLength; ++i){
         m_feedbackData.QTarget[i] = CBitConverter::ToDouble(pBuffer + iStartIndex);
@@ -178,7 +178,7 @@ void CFeedback::ParseData(char* pBuffer)
         iStartIndex +=8;
     }
 
-    // 实际关节值
+    // 実際の関節値
     iArrLength = sizeof(m_feedbackData.QActual)/sizeof(m_feedbackData.QActual[0]);
     for(int i=0; i<iArrLength; ++i){
         m_feedbackData.QActual[i] = CBitConverter::ToDouble(pBuffer + iStartIndex);
@@ -197,7 +197,7 @@ void CFeedback::ParseData(char* pBuffer)
         iStartIndex +=8;
     }
 
-    // 工具数据
+    // ツールデータ
     iArrLength = sizeof(m_feedbackData.ActualTCPForce)/sizeof(m_feedbackData.ActualTCPForce[0]);
     for(int i=0; i<iArrLength; ++i){
         m_feedbackData.ActualTCPForce[i] = CBitConverter::ToDouble(pBuffer + iStartIndex);
@@ -234,7 +234,7 @@ void CFeedback::ParseData(char* pBuffer)
         iStartIndex +=8;
     }
 
-    // 温度/模式/电压
+    // 温度/モード/電圧
     iArrLength = sizeof(m_feedbackData.MotorTempetatures)/sizeof(m_feedbackData.MotorTempetatures[0]);
     for(int i=0; i<iArrLength; ++i){
         m_feedbackData.MotorTempetatures[i] = CBitConverter::ToDouble(pBuffer + iStartIndex);
@@ -253,7 +253,7 @@ void CFeedback::ParseData(char* pBuffer)
         iStartIndex +=8;
     }
 
-    // 手系和状态标志
+    // ハンド種別と状態フラグ
     iArrLength = sizeof(m_feedbackData.Handtype)/sizeof(m_feedbackData.Handtype[0]);
     for(int i=0; i<iArrLength; ++i){
         m_feedbackData.Handtype[i] = pBuffer[iStartIndex];
@@ -272,14 +272,14 @@ void CFeedback::ParseData(char* pBuffer)
     m_feedbackData.XYZAccelerationRatio = pBuffer[iStartIndex++];
     m_feedbackData.RAccelerationRatio = pBuffer[iStartIndex++];
 
-    // 保留位 Reserved6[2]
+    // 予約領域 Reserved6[2]
     iArrLength = sizeof(m_feedbackData.Reserved6) / sizeof(m_feedbackData.Reserved6[0]);
     for (int i = 0; i < iArrLength; ++i) {
         m_feedbackData.Reserved6[i] = pBuffer[iStartIndex];
         iStartIndex += 1;
     }
 
-    // 状态标志
+    // 状態フラグ
     m_feedbackData.BrakeStatus = pBuffer[iStartIndex++];
     m_feedbackData.EnableStatus = pBuffer[iStartIndex++];
     m_feedbackData.DragStatus = pBuffer[iStartIndex++];
@@ -299,14 +299,14 @@ void CFeedback::ParseData(char* pBuffer)
     m_feedbackData.J5ApproachSatus = pBuffer[iStartIndex++];
     m_feedbackData.J6ApproachSatus = pBuffer[iStartIndex++];
 
-    // 保留位 Reserved7[61]
+    // 予約領域 Reserved7[61]
     iArrLength = sizeof(m_feedbackData.Reserved7)/sizeof(m_feedbackData.Reserved7[0]);
     for(int i=0; i<iArrLength; ++i){
         m_feedbackData.Reserved7[i] = pBuffer[iStartIndex];
         iStartIndex +=1;
     }
 
-    // 振动/指令ID/力矩
+    // 振動/指令ID/トルク
     m_feedbackData.VibrationDisZ = CBitConverter::ToDouble(pBuffer + iStartIndex); iStartIndex +=8;
     m_feedbackData.CurrentCommandId = CBitConverter::ToInt64(pBuffer + iStartIndex); iStartIndex +=8;
 
@@ -316,13 +316,13 @@ void CFeedback::ParseData(char* pBuffer)
         iStartIndex +=8;
     }
 
-    //负载参数
+    // 負荷パラメータ
     m_feedbackData.Load = CBitConverter::ToDouble(pBuffer + iStartIndex); iStartIndex +=8;
     m_feedbackData.CenterX = CBitConverter::ToDouble(pBuffer + iStartIndex); iStartIndex +=8;
     m_feedbackData.CenterY = CBitConverter::ToDouble(pBuffer + iStartIndex); iStartIndex +=8;
     m_feedbackData.CenterZ = CBitConverter::ToDouble(pBuffer + iStartIndex); iStartIndex +=8;
 
-    //用户坐标/工具坐标
+    // ユーザー座標/ツール座標
     iArrLength = sizeof(m_feedbackData.UserValue)/sizeof(m_feedbackData.UserValue[0]);
     for(int i=0; i<iArrLength; ++i){
         m_feedbackData.UserValue[i] = CBitConverter::ToDouble(pBuffer + iStartIndex);
@@ -335,14 +335,14 @@ void CFeedback::ParseData(char* pBuffer)
         iStartIndex +=8;
     }
 
-    // 保留位
+    // 予約領域
     iArrLength = sizeof(m_feedbackData.Reserved8)/sizeof(m_feedbackData.Reserved8[0]);
     for(int i=0; i<iArrLength; ++i){
         m_feedbackData.Reserved8[i] = pBuffer[iStartIndex];
         iStartIndex +=1;
     }
 
-    //六维力和四元数
+    // 6軸力とクォータニオン
     iArrLength = sizeof(m_feedbackData.SixForceValue)/sizeof(m_feedbackData.SixForceValue[0]);
     for(int i=0; i<iArrLength; ++i){
         m_feedbackData.SixForceValue[i] = CBitConverter::ToDouble(pBuffer + iStartIndex);
@@ -366,7 +366,7 @@ void CFeedback::ParseData(char* pBuffer)
     m_feedbackData.SafetyState = pBuffer[iStartIndex++];
     m_feedbackData.SafetyState_Resevered = pBuffer[iStartIndex++];
 
-    // 保留位
+    // 予約領域
     iArrLength = sizeof(m_feedbackData.Reserved9)/sizeof(m_feedbackData.Reserved9[0]);
     for(int i=0; i<iArrLength; ++i){
         m_feedbackData.Reserved9[i] = pBuffer[iStartIndex];

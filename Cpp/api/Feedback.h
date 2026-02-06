@@ -27,14 +27,14 @@ namespace Dobot
         void OnDisconnected() override;
 
         /// <summary>
-        /// 接收返回的数据并解析处理
+        /// 受信データを取得し、解析・処理する
         /// </summary>
         void OnRecvData();
 
         /// <summary>
-        /// 解析数据
+        /// データ解析
         /// </summary>
-        /// <param name="buffer">一包完整的数据</param>
+        /// <param name="buffer">1パケット分の完全なデータ</param>
         void ParseData(char* pBuffer);
 
     private:

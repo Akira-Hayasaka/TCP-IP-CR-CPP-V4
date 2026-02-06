@@ -296,7 +296,7 @@ std::string CDashboard::SetCollisionLevel(int level)
 };
 
 
-//Collision
+// 衝突
 
 std::string CDashboard::SetFCCollision(double force, double torque)
 {
@@ -689,9 +689,9 @@ std::string CDashboard::SetOutputFloat(int address, int value)
     return SendRecvMsg(str);
 }
 
-/// @brief
-/// @param pt
-/// @return
+/// @brief 点到点動作（目標点: デカルト座標）
+/// @param pt デカルト座標の目標点
+/// @return 実行結果の説明メッセージ
 std::string CDashboard::MovJ(const CDescartesPoint& pt)
 {
     char cmd[200];
@@ -804,7 +804,7 @@ std::string CDashboard::Circle(const CJointPoint& pt, const CJointPoint& pt2, in
     return SendRecvMsg(cmd);
 }
 
-// 重载函数
+// オーバーロード関数
 std::string CDashboard::MoveJog(std::string traceName)
 {
     std::string str = "MoveJog(" + std::string(traceName) + ")";
@@ -918,7 +918,7 @@ std::string CDashboard::ServoP(const CDescartesPoint& pt)
     return SendRecvMsg(str);
 }
 
-//轨迹复现函数
+// 軌跡再生（リカバリ）関連
 std::string CDashboard::SetResumeOffset(double distance)
 {
     std::ostringstream oss;
@@ -947,7 +947,7 @@ std::string CDashboard::PathRecoveryStop()
     return SendRecvMsg(str);
 }
 
-//日志导出函数
+// ログエクスポート関連
 std::string CDashboard::LogExportUSB(int range)
 {
     std::string str = "LogExportUSB(" + std::to_string(range) + ")";
@@ -962,7 +962,7 @@ std::string CDashboard::GetExportStatus()
     return SendRecvMsg(str);
 }
 
-//力控指令
+// 力制御指令
 std::string CDashboard::EnableFTSensor(int status)
 {
     std::string str = "EnableFTSensor(" + std::to_string(status) + ")";
@@ -1115,7 +1115,7 @@ std::string CDashboard::FCSetForce(const CDescartesPoint& pt){
     return SendRecvMsg(str);
 }
 
-//460新增运动指令
+// 460 で追加された動作指令
 std::string CDashboard::RelPointTool(const CDescartesPoint& pt,const COffsetPoint& pt2)
 {
     char cmd[200];

@@ -8,10 +8,10 @@ DobotTcpDemo::DobotTcpDemo()
     unsigned int controlPort = 29999;
     unsigned int feekPort = 30004;
 
-    std::cout << "开始连接" << std::endl;
+    std::cout << "接続開始" << std::endl;
     m_Dashboard.Connect(robotIp, controlPort);
     m_CFeedback.Connect(robotIp, feekPort);
-    std::cout << "连接成功" << std::endl;
+    std::cout << "接続成功" << std::endl;
     m_CErrorInfoHelper.ParseControllerJsonFile("../alarmController.json");
     m_CErrorInfoHelper.ParseServoJsonFile("../alarmServo.json");
     threadGetFeedBackInfo = std::thread(&DobotTcpDemo::getFeedBackInfo, this);
@@ -48,7 +48,7 @@ void DobotTcpDemo::moveRobot()
 void DobotTcpDemo::getCurrentCommandID(std::string recvData, int& currentCommandID)
 {
     std::cout << "recvData " << recvData << std::endl;
-    currentCommandID = 2147483647;    // 初始值  int-max
+    currentCommandID = 2147483647;    // 初期値（int の最大値）
     if (recvData.find("device does not connected") != std::string::npos) {
         std::cout << "device does not connected " << std::endl;
         return;
@@ -59,10 +59,11 @@ void DobotTcpDemo::getCurrentCommandID(std::string recvData, int& currentCommand
         return;
     }
 
-    // recvData 为 0,{2},MovJ(joint={-90, 20, 0, 0, 0, 0})     vecRecv为所有数字的集合 [ 0,2,-90, 20, 0, 0, 0, 0]
+    // recvData 例: 0,{2},MovJ(joint={-90, 20, 0, 0, 0, 0})
+    // vecRecv は文字列中の数値だけを抽出した配列例: [0, 2, -90, 20, 0, 0, 0, 0]
     std::vector<std::string> vecRecv = regexRecv(recvData);
 
-    // vecRecv[0]为指令是否下发成功   vecRecv[1]为返回运动指令currentCommandID
+    // vecRecv[0]: 指令送信成否（0=成功） / vecRecv[1]: 返却される動作指令の currentCommandID
     if (vecRecv.size() >= 2U && std::stoi(vecRecv[0]) == 0) {
         currentCommandID = std::stoi(vecRecv[1]);
     }
@@ -132,26 +133,26 @@ void DobotTcpDemo::clearRobotError()
                     Dobot::CErrorInfoBean beanController;
                     Dobot::CErrorInfoBean beanServo;
                     if (std::stoi(errorIdVec[i]) != 0) {
-                        printf("告警码：%s\n", errorIdVec[i].c_str());
+                        printf("アラームコード: %s\n", errorIdVec[i].c_str());
                         if (m_CErrorInfoHelper.FindController(std::stoi(errorIdVec[i]), beanController)) {
-                            printf("控制器告警：%d, 告警原因：%s,%s\n", beanController.id,
-                                   beanController.zh_CN.description.c_str(), beanController.en.description.c_str());
+                            printf("コントローラアラーム: %d, 原因: %s\n", beanController.id,
+                                   beanController.en.description.c_str());
                         } else {
                             if (m_CErrorInfoHelper.FindServo(std::stoi(errorIdVec[i]), beanServo)) {
-                                printf("伺服告警：%d,告警原因：%s, %s\n", beanServo.id,
-                                       beanServo.zh_CN.description.c_str(), beanServo.en.description.c_str());
+                                printf("サーボアラーム: %d, 原因: %s\n", beanServo.id,
+                                       beanServo.en.description.c_str());
                             }
                         }
                     }
                 }
                 char choose[50] = { "" };
-                std::cout << "输入1, 将清除错误, 机器继续运行:" << std::endl;
+                std::cout << "1を入力するとエラーをクリアして動作を継続します:" << std::endl;
                 std::cin >> choose;
-                std::cout << "您的选择： " << choose << std::endl;
+                std::cout << "入力値: " << choose << std::endl;
                 try {
                     int result = std::stoi(choose);
                     if (result == 1) {
-                        std::cout << "清除错误，机器继续运行！" << std::endl;
+                        std::cout << "エラーをクリアしました。動作を継続します。" << std::endl;
                         m_Dashboard.ClearError();
                     }
                 } catch (const std::exception& e) {
@@ -161,15 +162,15 @@ void DobotTcpDemo::clearRobotError()
                 }
             } else {
                 if (feedbackData.RobotMode == 11) {
-                    std::cout << "机器发生碰撞 " << std::endl;
+                    std::cout << "ロボットが衝突を検知しました" << std::endl;
                     char choose[50] = { "" };
-                    std::cout << "输入1, 将清除碰撞, 机器继续运行: " << std::endl;
+                    std::cout << "1を入力すると衝突状態をクリアして動作を継続します: " << std::endl;
                     std::cin >> choose;
-                    std::cout << "您的选择： " << choose << std::endl;
+                    std::cout << "入力値: " << choose << std::endl;
                     try {
                         int result = std::stoi(choose);
                         if (result == 1) {
-                            std::cout << "清除错误，机器继续运行！" << std::endl;
+                            std::cout << "エラーをクリアしました。動作を継続します。" << std::endl;
                             m_Dashboard.ClearError();
                         }
                     } catch (const std::exception& e) {
@@ -180,15 +181,15 @@ void DobotTcpDemo::clearRobotError()
                 }
 
                 if (!feedbackData.EnableStatus) {
-                    std::cout << "机器未使能 " << std::endl;
+                    std::cout << "ロボットがイネーブルされていません" << std::endl;
                     char choose[50] = { "" };
-                    std::cout << "输入1, 机器将使能: " << std::endl;
+                    std::cout << "1を入力するとロボットをイネーブルします: " << std::endl;
                     std::cin >> choose;
-                    std::cout << "您的选择： " << choose << std::endl;
+                    std::cout << "入力値: " << choose << std::endl;
                     try {
                         int result = std::stoi(choose);
                         if (result == 1) {
-                            std::cout << "机器使能！" << std::endl;
+                            std::cout << "ロボットをイネーブルしました！" << std::endl;
                             m_Dashboard.EnableRobot();
                         }
                     } catch (const std::exception& e) {

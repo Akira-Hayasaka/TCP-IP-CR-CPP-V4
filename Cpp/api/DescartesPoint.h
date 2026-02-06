@@ -8,32 +8,32 @@ struct CDescartesPoint
 {
 public:
     /// <summary>
-    /// X 轴位置，单位：毫米
+    /// X 軸位置（単位: mm）
     /// </summary>
     double x;
 
     /// <summary>
-    /// Y 轴位置，单位：毫米
+    /// Y 軸位置（単位: mm）
     /// </summary>
     double y;
 
     /// <summary>
-    /// Z 轴位置，单位：毫米
+    /// Z 軸位置（単位: mm）
     /// </summary>
     double z;
 
     /// <summary>
-    /// Rx 轴位置，单位：度
+    /// Rx 軸位置（単位: 度）
     /// </summary>
     double rx;
 
     /// <summary>
-    /// Ry 轴位置，单位：度
+    /// Ry 軸位置（単位: 度）
     /// </summary>
     double ry;
 
     /// <summary>
-    /// Rz 轴位置，单位：度
+    /// Rz 軸位置（単位: 度）
     /// </summary>
     double rz;
 
@@ -49,32 +49,32 @@ struct CForcePoint
 {
     public:
         /// <summary>
-        /// X 轴目标力，单位：毫米
+        /// X 軸目標力（単位: mm）
         /// </summary>
         double fx;
 
         /// <summary>
-        /// Y 轴目标力，单位：毫米
+        /// Y 軸目標力（単位: mm）
         /// </summary>
         double fy;
 
         /// <summary>
-        /// Z 轴目标力，单位：毫米
+        /// Z 軸目標力（単位: mm）
         /// </summary>
         double fz;
 
         /// <summary>
-        /// Rx 轴目标力，单位：度
+        /// Rx 軸目標力（単位: 度）
         /// </summary>
         double frx;
 
         /// <summary>
-        /// Ry 轴目标力，单位：度
+        /// Ry 軸目標力（単位: 度）
         /// </summary>
         double fry;
 
         /// <summary>
-        /// Rz 轴目标力，单位：度
+        /// Rz 軸目標力（単位: 度）
         /// </summary>
         double frz;
 
@@ -90,32 +90,32 @@ struct COffsetPoint
 {
     public:
         /// <summary>
-        /// X 轴偏移量
+        /// X 軸オフセット量
         /// </summary>
         double offsetX;
 
         /// <summary>
-        /// Y 轴偏移量
+        /// Y 軸オフセット量
         /// </summary>
         double offsetY;
 
         /// <summary>
-        /// Z 轴偏移量
+        /// Z 軸オフセット量
         /// </summary>
         double offsetZ;
 
         /// <summary>
-        /// Rx 轴偏移量
+        /// Rx 軸オフセット量
         /// </summary>
         double offsetRx;
 
         /// <summary>
-        /// Ry 轴偏移量
+        /// Ry 軸オフセット量
         /// </summary>
         double offsetRy;
 
         /// <summary>
-        /// Rz 轴偏移量
+        /// Rz 軸オフセット量
         /// </summary>
         double offsetRz;
 
@@ -130,16 +130,16 @@ struct COffsetPoint
 struct ModeDistanceIndexStatus
 {
 public:
-    // 设置Distance模式
+    // Distance モードを設定
     int Mode;
 
-    // 运行指定的距离
+    // 指定距離で実行
     int Distance;
 
-    // 数字输出索引
+    // デジタル出力インデックス
     int Index;
 
-    // 数字输出状态
+    // デジタル出力状態
     int Status;
     std::string ToString()
     {

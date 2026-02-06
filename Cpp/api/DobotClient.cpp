@@ -168,7 +168,7 @@ std::string CDobotClient::WaitReply(int iTimeoutMillsecond)
     if (iRet < 0) {
         Disconnect();
         return "";
-    } else if (0 == iRet) {    // timeout,do nothing
+    } else if (0 == iRet) {    // タイムアウト（何もしない）
         return "";
     }
 

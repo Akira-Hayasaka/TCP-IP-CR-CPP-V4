@@ -41,15 +41,15 @@ namespace Dobot
         unsigned short GetPort() const;
 
         /// <summary>
-        /// 连接设备
+        /// デバイスへ接続
         /// </summary>
-        /// <param name="strIp">设备地址</param>
-        /// <param name="iPort">指定端口</param>
-        /// <returns>true成功，false失败</returns>
+        /// <param name="strIp">デバイスのアドレス</param>
+        /// <param name="iPort">接続先ポート</param>
+        /// <returns>true: 成功 / false: 失敗</returns>
         bool Connect(std::string strIp, unsigned short iPort);
 
         /// <summary>
-        /// 断开连接
+        /// 切断
         /// </summary>
         void Disconnect();
 
@@ -63,18 +63,18 @@ namespace Dobot
         void DestroyConstruct();
 
         /// <summary>
-        /// 发送数据
+        /// データ送信
         /// </summary>
-        /// <param name="str">发送内容</param>
-        /// <returns>成功-true，失败-false</returns>
+        /// <param name="str">送信内容</param>
+        /// <returns>true: 成功 / false: 失敗</returns>
 
         bool SendData(std::string str);
 
         /// <summary>
-        /// 等待响应
+        /// 応答待ち
         /// </summary>
-        /// <param name="iTimeoutMillsecond">等待时间，毫秒单位</param>
-        /// <returns>返回响应的内容</returns>
+        /// <param name="iTimeoutMillsecond">待機時間（ミリ秒）</param>
+        /// <returns>応答内容</returns>
         std::string WaitReply(int iTimeoutMillsecond);
 
         int Receive(char* pBuffer, int iLen);

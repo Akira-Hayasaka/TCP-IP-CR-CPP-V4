@@ -77,20 +77,20 @@ void DobotTcpDemo::moveRobot()
     m_Dashboard.ModbusRTUCreate(1, 1, "Args... args", 0);
 
     m_Dashboard.ModbusCreate("aa", 111, 1);
-    m_Dashboard.ModbusCreate("11", 11, 1, 1);    //  重载可选参数
+    m_Dashboard.ModbusCreate("11", 11, 1, 1);    //  オーバーロード（オプション引数）
 
     m_Dashboard.ModbusClose(1);
     m_Dashboard.GetInBits(1, 1, 1);
 
     m_Dashboard.GetInRegs(1, 1, 1);
-    m_Dashboard.GetInRegs(1, 1, 1, "aa");    //  重载可选参数
+    m_Dashboard.GetInRegs(1, 1, 1, "aa");    //  オーバーロード（オプション引数）
 
     m_Dashboard.GetCoils(1, 1, 1);
     m_Dashboard.SetCoils(1, 1, 1, "aa");
     m_Dashboard.GetHoldRegs(1, 1, 1);
-    m_Dashboard.GetHoldRegs(1, 1, 1, "m_Dashboard.valType");    //  重载可选参数
+    m_Dashboard.GetHoldRegs(1, 1, 1, "m_Dashboard.valType");    //  オーバーロード（オプション引数）
     m_Dashboard.SetHoldRegs(1, 1, 1, "m_Dashboard.valTab");
-    m_Dashboard.SetHoldRegs(1, 1, 1, "m_Dashboard.valTab", " m_Dashboard.valType");    //  重载可选参数
+    m_Dashboard.SetHoldRegs(1, 1, 1, "m_Dashboard.valTab", " m_Dashboard.valType");    //  オーバーロード（オプション引数）
     m_Dashboard.DI(1);
     m_Dashboard.ToolDI(1);
     m_Dashboard.AI(1);
@@ -168,9 +168,9 @@ void DobotTcpDemo::moveRobot()
 
     // m_Dashboard.MovJ(cp, username, toolname);
 
-    // /// 直线运动，目标点位为笛卡尔点位
-    // /// <param name="pt">笛卡尔点位</param>
-    // /// <returns>返回执行结果的描述信息</returns>
+    // /// 直線移動（目標点はデカルト座標）
+    // /// <param name="pt">デカルト座標の目標点</param>
+    // /// <returns>実行結果の説明メッセージ</returns>
     // m_Dashboard.MovL(pt);
 
     // m_Dashboard.MovL(pt, username, toolname);
